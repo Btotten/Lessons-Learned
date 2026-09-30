@@ -1,0 +1,88 @@
+{%- comment -%}
+  Varsity Customs Team Builder — Shopify Online Store 2.0 section.
+  Install: copy assets/vc-builder.js + assets/vc-builder.css into the theme's /assets folder,
+  this file into /sections, then add the "Varsity Customs Builder" section to any page template.
+  Link one Shopify product per builder style. Each product's variants should include the size
+  (YS, YM, YL, S, M, L, XL, 2XL, 3XL) as an option value.
+{%- endcomment -%}
+
+{{ 'vc-builder.css' | asset_url | stylesheet_tag }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bebas+Neue&family=Black+Ops+One&family=Graduate&family=Oswald:wght@600&family=Yellowtail&display=swap">
+
+<div class="page-width" style="padding-top: {{ section.settings.padding }}px; padding-bottom: {{ section.settings.padding }}px;">
+  <div id="vc-builder"></div>
+</div>
+
+{%- liquid
+  assign keys = 'jersey,jacket,hoodie,shorts' | split: ','
+  assign addon = section.settings.addon_product
+-%}
+<script>
+  window.VC_CONFIG = {
+    brand: {{ shop.name | json }},
+    currency: {{ cart.currency.iso_code | json }},
+    initialProduct: {{ section.settings.initial_style | json }},
+    designEndpoint: {{ section.settings.design_endpoint | json }},
+    pricing: { namePerUnit: {{ section.settings.name_price }}, logoPerUnit: {{ section.settings.logo_price }} },
+    shopify: {
+      addonVariantId: {% if addon != blank %}{{ addon.selected_or_first_available_variant.id }}{% else %}null{% endif %},
+      products: {
+        {%- for k in keys -%}
+          {%- assign setting_id = k | append: '_product' -%}
+          {%- assign sp = section.settings[setting_id] -%}
+          {%- if sp != blank -%}
+            {{ k | json }}: {
+              "handle": {{ sp.handle | json }},
+              "title": {{ sp.title | json }},
+              "variants": [
+                {%- for v in sp.variants -%}
+                  { "id": {{ v.id }}, "options": {{ v.options | json }}, "price": {{ v.price }}, "available": {{ v.available | json }} }{%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              ]
+            },
+          {%- endif -%}
+        {%- endfor -%}
+      }
+    }
+  };
+</script>
+<script src="{{ 'vc-builder.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Varsity Customs Builder",
+  "tag": "section",
+  "class": "section-vc-builder",
+  "settings": [
+    {
+      "type": "select", "id": "initial_style", "label": "Style shown first", "default": "jersey",
+      "options": [
+        { "value": "jersey", "label": "Pro Crew Jersey" },
+        { "value": "jacket", "label": "Heritage Varsity Jacket" },
+        { "value": "hoodie", "label": "Team Fleece Hoodie" },
+        { "value": "shorts", "label": "Game Shorts" }
+      ]
+    },
+    { "type": "header", "content": "Linked products (one per style, size as a variant option)" },
+    { "type": "product", "id": "jersey_product", "label": "Jersey product" },
+    { "type": "product", "id": "jacket_product", "label": "Varsity jacket product" },
+    { "type": "product", "id": "hoodie_product", "label": "Hoodie product" },
+    { "type": "product", "id": "shorts_product", "label": "Shorts product" },
+    { "type": "header", "content": "Personalization" },
+    {
+      "type": "product", "id": "addon_product", "label": "Name personalization fee product",
+      "info": "Optional. A $X product added once per named player so upcharges show up at checkout."
+    },
+    { "type": "number", "id": "name_price", "label": "Name upcharge shown in estimate", "default": 5 },
+    { "type": "number", "id": "logo_price", "label": "Logo upcharge shown in estimate", "default": 4 },
+    {
+      "type": "text", "id": "design_endpoint", "label": "Design storage endpoint",
+      "info": "Optional. URL of the Varsity Customs design server (or a Shopify app proxy path like /apps/vc/designs). Stores artwork and powers manufacturing work orders."
+    },
+    { "type": "range", "id": "padding", "label": "Vertical padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 24 }
+  ],
+  "presets": [{ "name": "Varsity Customs Builder" }]
+}
+{% endschema %}
