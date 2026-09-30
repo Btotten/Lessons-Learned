@@ -34,7 +34,9 @@ const palette = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'palette.j
 /* Everything below `pageMain` runs inside Chromium. */
 async function pageMain({ cfg, palette, tinted, textBoxes }) {
   const svgEl = document.querySelector('svg');
-  svgEl.setAttribute('width', 504); // natural size: client px == SVG user units
+  // Natural size so client px == SVG user units (bboxes, view splits and `area` use those units).
+  const vb = svgEl.viewBox.baseVal;
+  svgEl.setAttribute('width', vb.width); svgEl.setAttribute('height', vb.height);
   const drawables = [...svgEl.querySelectorAll('path,use,image,rect,polygon,circle,ellipse,line,polyline')]
     .filter((e) => !e.closest('defs,pattern,clipPath,mask'));
 
@@ -205,6 +207,26 @@ async function pageMain({ cfg, palette, tinted, textBoxes }) {
     }
     files.push({ path: `${v.id}/preview.png`, data: pv.toDataURL('image/png') });
 
+    // Decoration location guide (not a Kickflip layer): boxes in pixel coordinates of this view.
+    const locations = ((cfg.guides || {})[v.id] || []).map((g) => {
+      const [bx, by, bw, bh] = g.box;
+      return { id: g.id, label: g.label, x: Math.round((bx - crop.x) * S), y: Math.round((by - crop.y) * S), w: Math.round(bw * S), h: Math.round(bh * S) };
+    });
+    if (locations.length) {
+      const gc = document.createElement('canvas'); gc.width = W; gc.height = H;
+      const g = gc.getContext('2d');
+      g.drawImage(pv, 0, 0);
+      g.lineWidth = Math.max(2, S * 0.6); g.setLineDash([S * 2.5, S * 1.5]);
+      g.font = `600 ${Math.round(S * 5)}px sans-serif`; g.textBaseline = 'top';
+      for (const l of locations) {
+        g.strokeStyle = '#e8641b'; g.strokeRect(l.x, l.y, l.w, l.h);
+        const tw = g.measureText(l.label).width + S * 2;
+        g.fillStyle = 'rgba(232,100,27,.92)'; g.fillRect(l.x, l.y - S * 6.5, tw, S * 6.5);
+        g.fillStyle = '#fff'; g.fillText(l.label, l.x + S, l.y - S * 5.8);
+      }
+      files.push({ path: `${v.id}/guide.png`, data: gc.toDataURL('image/png') });
+    }
+
     for (const l of layers) {
       files.push({ path: `${v.id}/${l.file}`, data: toPNG(l.data) });
       if (tinted && l.kind === 'fabric') {
@@ -217,7 +239,7 @@ async function pageMain({ cfg, palette, tinted, textBoxes }) {
       }
     }
     manifest.views.push({
-      id: v.id, width: W, height: H,
+      id: v.id, width: W, height: H, crop, scale: S, locations,
       layers: layers.map((l) => ({ file: l.file, kind: l.kind, zone: l.zone, label: l.label })),
     });
   }

@@ -79,3 +79,20 @@ To add a new style, copy a config in `styles/` and adjust:
 - `zones` — label, preview `sample` color, `texture: true` for mesh fabrics.
 
 Colors in `palette.json` are placeholders; replace them with your mill's fabric colors and codes.
+
+## Placeholder varsity jacket (VC-JKT)
+
+An original, simple varsity jacket drawing so the Kickflip jacket product can be built before production
+vector flats exist. Swap in real flats later by pointing a style config at them; the Kickflip layer names stay the same.
+
+```bash
+node templates/varsity-jacket-template.js
+node tools/build_layers.js styles/VC-JKT-template.json
+```
+
+- Views: `front`, `back`, `right-sleeve`, `left-sleeve` (matches the order form diagrams).
+- Zones: wool body, sleeves, knit trim base, knit stripe 1, knit stripe 2, snaps, pocket trim.
+- `guide.png` per view marks the order form's decoration locations (1–10, sleeve Loc. A/B, collar 6C/6D).
+  The same boxes are in `output/VC-JKT/manifest.json` → `views[].locations` as pixel `x, y, w, h` on that
+  view's layer images, for sizing Kickflip decoration areas. Not a layer to upload.
+- Knit collar only; Byron collar, sailor collar and zipper hood need their own collar layers once drawn.
