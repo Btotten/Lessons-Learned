@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Varsity Customs — Layer Preview</title>
+<style>
+  :root { --ink: #111; --line: #ddd; --bg: #f3f1ec; }
+  body { margin: 0; font: 14px/1.4 system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+  header { padding: 14px 20px; background: #111; color: #fff; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  header b { font-size: 18px; letter-spacing: .04em; }
+  select { font: inherit; padding: 4px 8px; }
+  main { display: grid; grid-template-columns: 280px 1fr; gap: 20px; padding: 20px; }
+  .zones label { display: block; margin: 0 0 14px; font-weight: 600; }
+  .sw { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 6px; }
+  .sw button { aspect-ratio: 1; border: 1px solid rgba(0,0,0,.25); border-radius: 50%; cursor: pointer; padding: 0; }
+  .sw button.on { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+  .views { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  figure { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px; text-align: center; }
+  canvas { display: block; max-width: 100%; height: 520px; width: auto; }
+  .hint { color: #666; font-size: 12px; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } canvas { height: auto; width: 100%; } }
+</style>
+</head>
+<body>
+<header><b>VARSITY CUSTOMS</b> Layer preview
+  <select id="style"></select>
+  <span class="hint">Recolors the white fabric masks exactly as a layered customizer would.</span>
+</header>
+<main>
+  <section class="zones" id="zones"></section>
+  <section class="views" id="views"></section>
+</main>
+<script src="output/manifests.js"></script>
+<script src="palette.js"></script>
+<script>
+  const manifests = window.VC_MANIFESTS || {};
+  const palette = window.VC_PALETTE || [];
+  const styleSel = document.getElementById('style');
+  const colors = {};
+  const images = {};
+
+  Object.keys(manifests).forEach((k) => styleSel.add(new Option(k + ' — ' + manifests[k].name, k)));
+  styleSel.onchange = () => load(styleSel.value);
+  if (styleSel.options.length) load(styleSel.value);
+  else document.getElementById('views').textContent = 'No layers found. Run tools/build_layers.js first.';
+
+  function img(src) {
+    if (!images[src]) images[src] = new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
+    return images[src];
+  }
+
+  function load(style) {
+    const m = manifests[style];
+    m.zones.forEach((z) => { colors[style + z.id] = colors[style + z.id] || z.sample; });
+    const zonesEl = document.getElementById('zones');
+    zonesEl.innerHTML = m.zones.map((z) => `<label>${z.label}<div class="sw" data-zone="${z.id}">` +
+      palette.map((c) => `<button title="${c.name}" style="background:${c.hex}" data-hex="${c.hex}"></button>`).join('') + '</div></label>').join('');
+    zonesEl.onclick = (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      colors[style + b.parentNode.dataset.zone] = b.dataset.hex; draw(style);
+    };
+    document.getElementById('views').innerHTML = m.views.map((v) =>
+      `<figure><canvas id="cv-${v.id}" width="${v.width}" height="${v.height}"></canvas><figcaption>${v.id}</figcaption></figure>`).join('');
+    draw(style);
+  }
+
+  async function draw(style) {
+    const m = manifests[style];
+    document.querySelectorAll('.sw').forEach((sw) => sw.querySelectorAll('button').forEach((b) =>
+      b.classList.toggle('on', b.dataset.hex.toLowerCase() === (colors[style + sw.dataset.zone] || '').toLowerCase())));
+    for (const v of m.views) {
+      const cv = document.getElementById('cv-' + v.id), ctx = cv.getContext('2d');
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      for (const l of v.layers) {
+        const im = await img(`output/${style}/${v.id}/${l.file}`);
+        if (l.kind !== 'fabric') { ctx.drawImage(im, 0, 0); continue; }
+        const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height;
+        const tc = t.getContext('2d');
+        tc.drawImage(im, 0, 0);
+        tc.globalCompositeOperation = 'source-in';
+        tc.fillStyle = colors[style + l.zone]; tc.fillRect(0, 0, t.width, t.height);
+        ctx.drawImage(t, 0, 0);
+      }
+    }
+  }
+</script>
+</body>
+</html>

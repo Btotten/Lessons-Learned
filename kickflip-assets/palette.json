@@ -1,0 +1,22 @@
+[
+  { "name": "Black", "hex": "#111111", "code": "black" },
+  { "name": "White", "hex": "#FFFFFF", "code": "white" },
+  { "name": "Scarlet", "hex": "#B3122E", "code": "scarlet" },
+  { "name": "Cardinal", "hex": "#8C1D40", "code": "cardinal" },
+  { "name": "Maroon", "hex": "#5B1A2A", "code": "maroon" },
+  { "name": "Orange", "hex": "#E8641B", "code": "orange" },
+  { "name": "Athletic Gold", "hex": "#F2B705", "code": "athletic-gold" },
+  { "name": "Vegas Gold", "hex": "#C5B358", "code": "vegas-gold" },
+  { "name": "Kelly Green", "hex": "#1E8C45", "code": "kelly-green" },
+  { "name": "Forest", "hex": "#154734", "code": "forest" },
+  { "name": "Columbia Blue", "hex": "#7BAFD4", "code": "columbia-blue" },
+  { "name": "Royal", "hex": "#1D4FA0", "code": "royal" },
+  { "name": "Navy", "hex": "#14213D", "code": "navy" },
+  { "name": "Purple", "hex": "#4B2E83", "code": "purple" },
+  { "name": "Teal", "hex": "#00827F", "code": "teal" },
+  { "name": "Pink", "hex": "#E86FA5", "code": "pink" },
+  { "name": "Silver", "hex": "#A7A9AC", "code": "silver" },
+  { "name": "Charcoal", "hex": "#3C3F44", "code": "charcoal" },
+  { "name": "Cream", "hex": "#F3E9D2", "code": "cream" },
+  { "name": "Brown", "hex": "#5C3A21", "code": "brown" }
+]

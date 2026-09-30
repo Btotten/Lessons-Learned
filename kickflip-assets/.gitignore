@@ -1,0 +1,4 @@
+# Proprietary artwork: keep out of this public repo
+source/
+build/
+output/
