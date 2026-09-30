@@ -64,8 +64,12 @@ def process(view):
 
     # Garment coverage (anti-aliased edge) from alpha, else from the black background.
     if view.get("background") == "alpha":
-        cover = a[..., 3] / 255.0
-        solid = a[..., 3] > 128
+        al = a[..., 3]
+        trim = view.get("trimEdge", 0)  # cut-outs often carry a thin white outline
+        if trim:
+            al = nd.grey_erosion(al, footprint=disk(trim))
+        cover = al / 255.0
+        solid = al > 128
     else:
         solid = nd.binary_fill_holes(L > 20)
         cover = solid.astype(float)

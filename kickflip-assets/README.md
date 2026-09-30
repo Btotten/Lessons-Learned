@@ -107,12 +107,13 @@ pip install numpy pillow scipy          # once
 python3 tools/render_to_layers.py styles/VC-JKT3D.json
 ```
 
-- Views: `front`, `back`, `left-side`, `right-side` (source PNGs in `source/jacket-renders/`, git-ignored).
+- Views: `front`, `back`, `left-side`, `right-side` (source PNGs in `source/jacket-renders-v2/`, git-ignored;
+  export renders as transparent PNGs — `trimEdge` removes a thin white cut-out outline).
 - Zones: body, sleeves, knit, stripes, snaps, pocket-trim. Stack: `00-details-under` (neck lining, as rendered)
   → `10-*` masks → `60-shadows` (black, multiply) → `65-highlights` (white sheen).
 - How zones are found: brightness splits white from gray; thin white bands inside the traced knit `bands` are
   stripes; in `column` bands, gray counts as knit only within `tTop` px above the column's first stripe, so a
   sleeve hanging in front of the waistband stays a sleeve. `zones-debug.png` shows the split in false color —
   check it whenever renders change, and adjust the band polygons in the config.
-- Known limits: snaps seen edge-on in the side views take the body color; both knit stripes share one color.
+- Known limit: both knit stripes share one color (the render has one stripe shade).
 - New renders from the same 3D setup (same camera) reuse this config unchanged.
