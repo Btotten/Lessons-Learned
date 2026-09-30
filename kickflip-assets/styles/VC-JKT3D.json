@@ -1,0 +1,74 @@
+{
+  "style": "VC-JKT3D",
+  "name": "Varsity Jacket (3D render)",
+  "out": "../output/VC-JKT3D",
+  "thresholds": { "white": 200, "stripeRadius": 10, "sleeveMinArea": 15000 },
+  "zones": [
+    { "id": "body", "label": "Wool body", "sample": "#5B1A2A" },
+    { "id": "sleeves", "label": "Sleeves", "sample": "#A7A9AC" },
+    { "id": "knit", "label": "Knit trim base", "sample": "#5B1A2A" },
+    { "id": "stripes", "label": "Knit stripes", "sample": "#FFFFFF" },
+    { "id": "snaps", "label": "Snaps", "sample": "#FFFFFF" },
+    { "id": "pocket-trim", "label": "Pocket trim", "sample": "#A7A9AC" }
+  ],
+  "views": [
+    {
+      "id": "front", "image": "../source/jacket-renders/front.png", "background": "alpha",
+      "interior": [[[575, 95], [730, 95], [705, 212], [600, 212]]],
+      "bands": [
+        { "name": "collar", "poly": [[495, 20], [810, 20], [810, 228], [495, 228]] },
+        { "name": "waistband", "poly": [[345, 1000], [960, 1000], [960, 1140], [345, 1140]], "column": true, "tTop": 60 },
+        { "name": "cuff-l", "poly": [[85, 1025], [240, 1025], [240, 1170], [85, 1170]], "column": true, "tTop": 18 },
+        { "name": "cuff-r", "poly": [[1065, 1025], [1220, 1025], [1225, 1170], [1065, 1170]], "column": true, "tTop": 18 }
+      ],
+      "guides": [
+        { "id": "1", "label": "1 Right chest", "box": [390, 250, 150, 140] },
+        { "id": "2", "label": "2 Left chest", "box": [765, 250, 150, 140] },
+        { "id": "3", "label": "3 Full front", "box": [380, 430, 550, 330] },
+        { "id": "10-PR", "label": "10-PR", "box": [330, 560, 140, 80] },
+        { "id": "10-PL", "label": "10-PL", "box": [840, 560, 140, 80] }
+      ]
+    },
+    {
+      "id": "back", "image": "../source/jacket-renders/back.png",
+      "bands": [
+        { "name": "collar", "poly": [[495, 15], [810, 15], [810, 110], [495, 110]] },
+        { "name": "waistband", "poly": [[345, 995], [960, 995], [960, 1135], [345, 1135]], "column": true, "tTop": 60 },
+        { "name": "cuff-l", "poly": [[60, 1025], [220, 1025], [220, 1160], [60, 1160]], "column": true, "tTop": 18 },
+        { "name": "cuff-r", "poly": [[1080, 1025], [1240, 1025], [1240, 1160], [1080, 1160]], "column": true, "tTop": 18 }
+      ],
+      "guides": [
+        { "id": "6", "label": "6C/6D Collar", "box": [520, 30, 265, 70] },
+        { "id": "7", "label": "7 Upper back", "box": [380, 150, 550, 150] },
+        { "id": "8", "label": "8 Middle back", "box": [370, 320, 570, 400] },
+        { "id": "9", "label": "9 Lower back", "box": [380, 760, 550, 200] }
+      ]
+    },
+    {
+      "id": "left-side", "image": "../source/jacket-renders/left-side.png",
+      "bands": [
+        { "name": "collar", "poly": [[535, 5], [615, 5], [800, 165], [765, 200], [700, 160], [530, 95]] },
+        { "name": "waist-back", "poly": [[425, 955], [565, 955], [565, 1090], [425, 1090]], "column": true, "tTop": 60 },
+        { "name": "waist-front", "poly": [[730, 955], [860, 955], [860, 1090], [730, 1090]], "column": true, "tTop": 60 },
+        { "name": "cuff", "poly": [[595, 1075], [770, 1075], [770, 1200], [595, 1200]], "column": true, "tTop": 18 }
+      ],
+      "guides": [
+        { "id": "5A", "label": "5 Left sleeve Loc. A", "box": [475, 230, 240, 210] },
+        { "id": "5B", "label": "5 Left sleeve Loc. B", "box": [490, 480, 230, 280] }
+      ]
+    },
+    {
+      "id": "right-side", "image": "../source/jacket-renders/right-side.png",
+      "bands": [
+        { "name": "collar", "poly": [[690, 10], [765, 10], [780, 70], [560, 190], [505, 195], [515, 160]] },
+        { "name": "waist-front", "poly": [[435, 955], [565, 955], [565, 1085], [435, 1085]], "column": true, "tTop": 60 },
+        { "name": "waist-back", "poly": [[710, 955], [865, 955], [865, 1085], [710, 1085]], "column": true, "tTop": 60 },
+        { "name": "cuff", "poly": [[525, 1065], [695, 1065], [695, 1195], [525, 1195]], "column": true, "tTop": 18 }
+      ],
+      "guides": [
+        { "id": "4A", "label": "4 Right sleeve Loc. A", "box": [585, 230, 240, 210] },
+        { "id": "4B", "label": "4 Right sleeve Loc. B", "box": [585, 480, 240, 280] }
+      ]
+    }
+  ]
+}
