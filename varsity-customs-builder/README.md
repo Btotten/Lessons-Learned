@@ -24,3 +24,15 @@ cd server
 PORT=8787 PUBLIC_URL=https://designs.example.com ALLOWED_ORIGINS=https://yourstore.com \
 SHOPIFY_WEBHOOK_SECRET=... ADMIN_TOKEN=... node server.js
 ```
+
+## Offline version
+
+`offline/VarsityCustomsBuilder.html` is the whole builder in **one file** — code, styles and fonts inside —
+so it runs with no internet: double-click to open, email it, or put it on a USB stick / sales laptop.
+
+- Designs save automatically in that browser; "Start over" clears them.
+- Finish an order with **Download Tech Pack** (print / save as PDF) and the Spec JSON, Roster CSV and
+  Artwork SVG buttons on the Review step. There is no cart or upload while offline.
+- Rebuild after changing anything in `assets/`: `python3 tools/build_offline.py`.
+- Fonts are bundled under the SIL Open Font License; keep `offline/fonts/OFL-LICENSES.txt` with the file
+  when you share it.

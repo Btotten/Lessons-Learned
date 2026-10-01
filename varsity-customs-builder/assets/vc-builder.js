@@ -17,6 +17,9 @@
   }, window.VC_CONFIG || {});
 
   var FONT_URL = 'https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bebas+Neue&family=Black+Ops+One&family=Graduate&family=Oswald:wght@600&family=Yellowtail&display=swap';
+  // Offline build embeds the fonts and sets this, so exports never reach for the web.
+  var FONT_CSS = window.VC_FONT_CSS || '';
+  var fontStyle = function () { return '<style>' + (FONT_CSS || '@import url(\'' + FONT_URL + '\');') + '</style>'; };
 
   /* ------------------------------------------------------------------ data */
 
@@ -418,7 +421,7 @@
       '<rect x="0" y="0" width="400" height="440" fill="url(#' + uid + 'g)" mask="url(#' + uid + 'm)" pointer-events="none"/>';
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" role="img" aria-label="' +
       esc(p.name + ' ' + view) + '"' + (opts.size ? ' width="' + opts.size + '" height="' + Math.round(opts.size * 1.1) + '"' : '') + '>' +
-      (opts.standalone ? '<style>@import url(\'' + FONT_URL + '\');</style>' : '') +
+      (opts.standalone ? fontStyle() : '') +
       '<g class="vc-garment" stroke="rgba(0,0,0,.35)" stroke-width="1.2" stroke-linejoin="round">' + p.render(view, c) + '</g>' +
       '<g class="vc-deco">' + deco + '</g>' + shading + '</svg>';
   }
@@ -519,7 +522,7 @@
     function row(cells, th) { return '<tr>' + cells.map(function (c) { return (th ? '<th>' : '<td>') + c + (th ? '</th>' : '</td>'); }).join('') + '</tr>'; }
     function sw(ci) { return ci ? '<span class="sw" style="background:' + ci.hex + '"></span>' + esc(ci.name) + ' <code>' + esc(ci.code) + '</code>' : '—'; }
     return '<!doctype html><html><head><meta charset="utf-8"><title>Tech Pack ' + esc(spec.designId) + '</title>' +
-      '<link rel="stylesheet" href="' + FONT_URL + '">' +
+      (FONT_CSS ? fontStyle() : '<link rel="stylesheet" href="' + FONT_URL + '">') +
       '<style>body{font:13px/1.45 system-ui,sans-serif;color:#111;margin:24px;max-width:1000px}' +
       'h1{font:22px Graduate,serif;margin:0}h2{font-size:14px;text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid #111;padding-bottom:4px;margin-top:28px}' +
       '.hdr{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid #111;padding-bottom:10px}' +
