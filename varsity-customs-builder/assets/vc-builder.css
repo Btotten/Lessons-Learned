@@ -135,3 +135,12 @@
   .vc-top-actions { gap: 10px; flex-direction: column; align-items: flex-end; }
   .vc-brand { font-size: 18px; }
 }
+
+/* In-page panel (tech pack / exports) used where pop-ups and downloads are blocked. */
+.vc-panel-ov { position: absolute; inset: 0; background: rgba(16,17,20,.55); display: flex; justify-content: center; align-items: flex-start; padding: 24px 16px; z-index: 20; overflow-y: auto; }
+.vc-panel-box { background: var(--vc-card); border-radius: var(--vc-radius); width: 100%; max-width: 1040px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+.vc-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--vc-line); position: sticky; top: 0; background: var(--vc-card); border-radius: var(--vc-radius) var(--vc-radius) 0 0; }
+.vc-panel-body { padding: 16px; overflow-x: auto; }
+.vc-panel-text { display: grid; gap: 8px; margin-bottom: 16px; }
+.vc-panel-text textarea { font: 12px/1.4 ui-monospace, Menlo, monospace; resize: vertical; }
+.vc-panel-text .vc-btn2 { justify-self: start; }

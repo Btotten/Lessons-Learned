@@ -29,9 +29,13 @@ font_css = "".join(
         fam, w, base64.b64encode(open(os.path.join(ROOT, "offline", "fonts", f), "rb").read()).decode())
     for fam, w, f in FONTS)
 
+import sys
+ARTIFACT = "--artifact" in sys.argv  # page body only, for hosting as a claude.ai page
+
 js = read("assets", "vc-builder.js")
 assert "</script" not in js.lower(), "inline script would close early"
-config = {"designEndpoint": None, "shopify": None}
+# inline: show tech pack / exports inside the page (hosted pages block pop-ups and downloads)
+config = {"designEndpoint": None, "shopify": None, "inline": ARTIFACT}
 
 html = f"""<!doctype html>
 <html lang="en">
@@ -57,6 +61,17 @@ window.VC_FONT_CSS = {json.dumps(font_css)};
 </body>
 </html>
 """
-out = os.path.join(ROOT, "offline", "VarsityCustomsBuilder.html")
+if ARTIFACT:
+    # The host adds doctype/head/body; keep title + styles first, one deliberate light look.
+    head, rest = html.split("<head>", 1)
+    inner, body = rest.split("</head>", 1)
+    inner = inner.replace('<meta charset="utf-8">\n', "").replace(
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n', "")
+    inner = inner.replace("<title>Varsity Customs - Team Builder (offline)</title>", "<title>Varsity Customs Builder</title>")
+    body = body.replace("<body>", "").replace("</body>", "").replace("</html>", "")
+    html = inner + "<style>:root{color-scheme:light} html,body{background:#e9e7e1}</style>\n" + body
+    out = sys.argv[sys.argv.index("--artifact") + 1]
+else:
+    out = os.path.join(ROOT, "offline", "VarsityCustomsBuilder.html")
 open(out, "w", encoding="utf-8").write(html)
 print(f"wrote {out} ({os.path.getsize(out) // 1024} KB)")

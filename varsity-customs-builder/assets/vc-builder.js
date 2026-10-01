@@ -751,7 +751,7 @@
     root.innerHTML =
       '<div class="vc">' +
       '<header class="vc-top"><div class="vc-brand">VARSITY <span>CUSTOMS</span></div><div class="vc-sub">Team Builder</div>' +
-      '<div class="vc-top-actions"><button type="button" class="vc-link" data-act="share">Copy share link</button>' +
+      '<div class="vc-top-actions">' + (CFG.inline ? '' : '<button type="button" class="vc-link" data-act="share">Copy share link</button>') +
       '<button type="button" class="vc-link" data-act="reset">Start over</button></div></header>' +
       '<div class="vc-main"><section class="vc-stage">' +
       '<div class="vc-views" role="tablist">' + ['front', 'back', 'both'].map(function (v) {
@@ -843,11 +843,25 @@
         case 'prev': goStep(state.step - 1); break;
         case 'cart': addToCart(); break;
         case 'quote': case 'techpack': openTechPack(); break;
-        case 'spec': download(state.designId + '-spec.json', JSON.stringify(buildSpec(), null, 2), 'application/json'); break;
-        case 'csv': download(state.designId + '-roster.csv', rosterCSV(), 'text/csv'); break;
+        case 'spec':
+          if (CFG.inline) showText('Spec JSON', JSON.stringify(buildSpec(), null, 2));
+          else download(state.designId + '-spec.json', JSON.stringify(buildSpec(), null, 2), 'application/json');
+          break;
+        case 'csv':
+          if (CFG.inline) showText('Roster CSV', rosterCSV());
+          else download(state.designId + '-roster.csv', rosterCSV(), 'text/csv');
+          break;
         case 'svg':
+          if (CFG.inline) { showText('Artwork SVG (front)', productionSVG('front'), 'Artwork SVG (back)', productionSVG('back')); break; }
           download(state.designId + '-front.svg', productionSVG('front'), 'image/svg+xml');
           setTimeout(function () { download(state.designId + '-back.svg', productionSVG('back'), 'image/svg+xml'); }, 400);
+          break;
+        case 'panel-close': closePanel(); break;
+        case 'panel-copy':
+          var ta = b.parentNode.querySelector('textarea');
+          (navigator.clipboard ? navigator.clipboard.writeText(ta.value) : Promise.reject())
+            .then(function () { toast('Copied.'); })
+            .catch(function () { ta.focus(); ta.select(); toast('Selected. Press Copy on your keyboard or menu.'); });
           break;
         case 'row-add':
           state.roster.push({ name: '', number: '', size: state.roster.length ? state.roster[state.roster.length - 1].size : 'L', qty: 1 });
@@ -864,8 +878,13 @@
         case 'logo-remove': state.logo = null; state.logoName = ''; renderStep(); renderPreview(); break;
         case 'share': share(); break;
         case 'reset':
-          if (confirm('Start a new design? Your current design will be cleared.')) {
-            state = defaults(state.product); renderStep(); renderPreview();
+          // Two taps instead of confirm(): dialogs are blocked in some embeds.
+          if (b.dataset.armed) {
+            clearTimeout(b._t); delete b.dataset.armed; b.textContent = 'Start over';
+            state = defaults(state.product); renderStep(); renderPreview(); toast('New design started.');
+          } else {
+            b.dataset.armed = '1'; b.textContent = 'Tap again to clear';
+            b._t = setTimeout(function () { delete b.dataset.armed; b.textContent = 'Start over'; }, 3000);
           }
           break;
       }
@@ -934,8 +953,41 @@
       .catch(function () { prompt('Copy this link:', url); });
   }
 
+  function panel(title, node) {
+    closePanel();
+    var ov = document.createElement('div');
+    ov.className = 'vc-panel-ov';
+    ov.innerHTML = '<div class="vc-panel-box" role="dialog" aria-label="' + esc(title) + '"><div class="vc-panel-head"><b>' +
+      esc(title) + '</b><button type="button" class="vc-btn2" data-act="panel-close">Close</button></div><div class="vc-panel-body"></div></div>';
+    ov.querySelector('.vc-panel-body').appendChild(node);
+    $('.vc', root).appendChild(ov);
+    ov.querySelector('[data-act="panel-close"]').focus();
+  }
+  function closePanel() { var o = $('.vc-panel-ov', root); if (o) o.remove(); }
+  function showText() {
+    var wrap = document.createElement('div');
+    for (var i = 0; i < arguments.length; i += 2) {
+      var sec = document.createElement('div'); sec.className = 'vc-panel-text';
+      sec.innerHTML = (arguments.length > 2 ? '<div class="vc-label">' + esc(arguments[i]) + '</div>' : '') +
+        '<textarea class="vc-input" readonly rows="12"></textarea><button type="button" class="vc-btn2" data-act="panel-copy">Copy</button>';
+      sec.querySelector('textarea').value = arguments[i + 1];
+      wrap.appendChild(sec);
+    }
+    panel(arguments[0].replace(/ \(front\)$/, ''), wrap);
+  }
+
   function openTechPack() {
     var html = techPackHTML();
+    if (CFG.inline) {
+      // Render inside the page (shadow root keeps its styles separate).
+      var host = document.createElement('div');
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var sr = host.attachShadow({ mode: 'open' });
+      sr.innerHTML = Array.prototype.map.call(doc.querySelectorAll('style'), function (st) { return st.outerHTML; }).join('') +
+        '<style>:host{display:block;background:#fff;color:#111}.btn{display:none}body,div{max-width:100%}</style>' + doc.body.innerHTML;
+      panel('Tech pack ' + state.designId, host);
+      return;
+    }
     var w = window.open(URL.createObjectURL(new Blob([html], { type: 'text/html' })), '_blank');
     if (!w) download(state.designId + '-techpack.html', html, 'text/html');
   }
