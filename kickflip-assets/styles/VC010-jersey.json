@@ -1,0 +1,103 @@
+{
+  "style": "VC010",
+  "name": "Men's Football Jersey",
+  "pdf": "../source/VC_Football_Jersey_2022.pdf",
+  "page": 1,
+  "svg": "../build/VC010.svg",
+  "out": "../output/VC010",
+  "hideLayers": [
+    "CALL OUTS",
+    "FORM"
+  ],
+  "removeText": true,
+  "scale": 8,
+  "views": [
+    {
+      "id": "front",
+      "maxX": 238
+    },
+    {
+      "id": "side",
+      "maxX": 336
+    },
+    {
+      "id": "back",
+      "maxX": 9999
+    }
+  ],
+  "zones": [
+    {
+      "id": "fabric-a",
+      "label": "Fabric A",
+      "sample": "#14213D"
+    },
+    {
+      "id": "fabric-b",
+      "label": "Fabric B (mesh body)",
+      "sample": "#14213D",
+      "texture": true
+    },
+    {
+      "id": "fabric-c",
+      "label": "Fabric C (sleeve / stripe)",
+      "sample": "#F2B705"
+    },
+    {
+      "id": "fabric-d",
+      "label": "Fabric D (stripe)",
+      "sample": "#FFFFFF"
+    }
+  ],
+  "rules": [
+    {
+      "match": {
+        "fill": "#c8c9c9"
+      },
+      "layer": "fabric-a"
+    },
+    {
+      "match": {
+        "fill": "#555557"
+      },
+      "layer": "fabric-c"
+    },
+    {
+      "match": {
+        "fill": "#ffffff",
+        "within": [
+          150,
+          100,
+          178,
+          120
+        ]
+      },
+      "layer": "details",
+      "why": "neck label"
+    },
+    {
+      "match": {
+        "fill": "#ffffff"
+      },
+      "layer": "fabric-d"
+    },
+    {
+      "match": {
+        "pattern": true
+      },
+      "layer": "fabric-b"
+    },
+    {
+      "match": {
+        "image": true,
+        "minArea": 20000
+      },
+      "layer": "shading"
+    }
+  ],
+  "area": [
+    76,
+    62,
+    503,
+    359
+  ]
+}

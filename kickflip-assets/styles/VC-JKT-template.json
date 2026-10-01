@@ -1,0 +1,258 @@
+{
+  "style": "VC-JKT",
+  "name": "Varsity Jacket (placeholder template)",
+  "svg": "../build/VC-JKT-TEMPLATE.svg",
+  "out": "../output/VC-JKT",
+  "scale": 4,
+  "area": [
+    0,
+    0,
+    1200,
+    460
+  ],
+  "views": [
+    {
+      "id": "front",
+      "maxX": 400
+    },
+    {
+      "id": "back",
+      "maxX": 800
+    },
+    {
+      "id": "right-sleeve",
+      "maxX": 1000
+    },
+    {
+      "id": "left-sleeve",
+      "maxX": 9999
+    }
+  ],
+  "zones": [
+    {
+      "id": "body",
+      "label": "Wool body",
+      "sample": "#14213D"
+    },
+    {
+      "id": "sleeves",
+      "label": "Sleeves (leather)",
+      "sample": "#F3E9D2"
+    },
+    {
+      "id": "knit",
+      "label": "Knit trim base",
+      "sample": "#14213D"
+    },
+    {
+      "id": "stripe-1",
+      "label": "Knit stripe 1",
+      "sample": "#F2B705"
+    },
+    {
+      "id": "stripe-2",
+      "label": "Knit stripe 2",
+      "sample": "#FFFFFF"
+    },
+    {
+      "id": "snaps",
+      "label": "Snaps",
+      "sample": "#F2B705"
+    },
+    {
+      "id": "pocket-trim",
+      "label": "Pocket trim",
+      "sample": "#F3E9D2"
+    }
+  ],
+  "rules": [
+    {
+      "match": {
+        "fill": "#0a1f5c"
+      },
+      "layer": "body"
+    },
+    {
+      "match": {
+        "fill": "#efe8d8"
+      },
+      "layer": "sleeves"
+    },
+    {
+      "match": {
+        "fill": "#102a6e"
+      },
+      "layer": "knit"
+    },
+    {
+      "match": {
+        "fill": "#c8a200"
+      },
+      "layer": "stripe-1"
+    },
+    {
+      "match": {
+        "fill": "#fefefe"
+      },
+      "layer": "stripe-2"
+    },
+    {
+      "match": {
+        "fill": "#c8a201"
+      },
+      "layer": "snaps"
+    },
+    {
+      "match": {
+        "fill": "#efe8d9"
+      },
+      "layer": "pocket-trim"
+    },
+    {
+      "match": {
+        "fill": "url(#shade)"
+      },
+      "layer": "shading"
+    }
+  ],
+  "guides": {
+    "front": [
+      {
+        "id": "1",
+        "label": "1 Right chest",
+        "box": [
+          136,
+          118,
+          52,
+          52
+        ]
+      },
+      {
+        "id": "2",
+        "label": "2 Left chest",
+        "box": [
+          212,
+          118,
+          52,
+          52
+        ]
+      },
+      {
+        "id": "3",
+        "label": "3 Full front",
+        "box": [
+          128,
+          180,
+          144,
+          100
+        ]
+      },
+      {
+        "id": "10-PR",
+        "label": "10-PR",
+        "box": [
+          124,
+          222,
+          44,
+          24
+        ]
+      },
+      {
+        "id": "10-PL",
+        "label": "10-PL",
+        "box": [
+          232,
+          222,
+          44,
+          24
+        ]
+      }
+    ],
+    "back": [
+      {
+        "id": "6",
+        "label": "6C/6D Collar",
+        "box": [
+          570,
+          76,
+          60,
+          18
+        ]
+      },
+      {
+        "id": "7",
+        "label": "7 Upper back",
+        "box": [
+          536,
+          100,
+          128,
+          48
+        ]
+      },
+      {
+        "id": "8",
+        "label": "8 Middle back",
+        "box": [
+          528,
+          158,
+          144,
+          124
+        ]
+      },
+      {
+        "id": "9",
+        "label": "9 Lower back",
+        "box": [
+          536,
+          292,
+          128,
+          60
+        ]
+      }
+    ],
+    "right-sleeve": [
+      {
+        "id": "4A",
+        "label": "4 Loc. A",
+        "box": [
+          860,
+          96,
+          80,
+          80
+        ]
+      },
+      {
+        "id": "4B",
+        "label": "4 Loc. B",
+        "box": [
+          864,
+          200,
+          72,
+          110
+        ]
+      }
+    ],
+    "left-sleeve": [
+      {
+        "id": "5A",
+        "label": "5 Loc. A",
+        "box": [
+          1060,
+          96,
+          80,
+          80
+        ]
+      },
+      {
+        "id": "5B",
+        "label": "5 Loc. B",
+        "box": [
+          1064,
+          200,
+          72,
+          110
+        ]
+      }
+    ]
+  }
+}

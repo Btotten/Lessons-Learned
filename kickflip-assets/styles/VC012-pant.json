@@ -1,0 +1,87 @@
+{
+  "style": "VC012",
+  "name": "Men's Football Pant",
+  "pdf": "../source/VC_FOOTBALL_PANTS_2022.pdf",
+  "page": 1,
+  "svg": "../build/VC012.svg",
+  "out": "../output/VC012",
+  "hideLayers": [
+    "CALL OUTS",
+    "FORM"
+  ],
+  "removeText": true,
+  "scale": 8,
+  "views": [
+    {
+      "id": "front",
+      "maxX": 246
+    },
+    {
+      "id": "side",
+      "maxX": 333
+    },
+    {
+      "id": "back",
+      "maxX": 9999
+    }
+  ],
+  "zones": [
+    {
+      "id": "fabric-a",
+      "label": "Fabric A (body)",
+      "sample": "#FFFFFF"
+    },
+    {
+      "id": "fabric-b",
+      "label": "Fabric B (mesh panels)",
+      "sample": "#FFFFFF",
+      "texture": true
+    },
+    {
+      "id": "fabric-c",
+      "label": "Fabric C (mesh side stripe)",
+      "sample": "#14213D",
+      "texture": true
+    }
+  ],
+  "rules": [
+    {
+      "match": {
+        "patternColors": "#595a5c"
+      },
+      "layer": "fabric-c"
+    },
+    {
+      "match": {
+        "pattern": true
+      },
+      "layer": "fabric-b"
+    },
+    {
+      "match": {
+        "fill": "#ffffff"
+      },
+      "layer": "fabric-a"
+    },
+    {
+      "match": {
+        "image": true
+      },
+      "layer": "shading",
+      "why": "waistband gradient and V logo (logo has a white box, so multiply it)"
+    },
+    {
+      "match": {
+        "fill": "#828384"
+      },
+      "layer": "shading",
+      "why": "fold lines on back"
+    }
+  ],
+  "area": [
+    76,
+    62,
+    503,
+    359
+  ]
+}
